@@ -1,0 +1,163 @@
+<html>
+<head>
+<style>
+/* Copied from: http://yui.yahooapis.com/3.18.1/build/cssreset/cssreset-min.css */
+html{color:#000;background:#FFF}body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,code,form,fieldset,legend,input,textarea,p,blockquote,th,td{margin:0;padding:0}table{border-collapse:collapse;border-spacing:0}fieldset,img{border:0}address,caption,cite,code,dfn,em,strong,th,var{font-style:normal;font-weight:normal}ol,ul{list-style:none}caption,th{text-align:left}h1,h2,h3,h4,h5,h6{font-size:100%;font-weight:normal}q:before,q:after{content:''}abbr,acronym{border:0;font-variant:normal}sup{vertical-align:text-top}sub{vertical-align:text-bottom}input,textarea,select{font-family:inherit;font-size:inherit;font-weight:inherit;*font-size:100%}legend{color:#000}#yui3-css-stamp.cssreset{display:none}
+/* --- end Yahoo reset script --- */
+
+* {
+  box-sizing: border-box;
+}
+html, body {
+  padding: 0;
+  margin: 0;
+}
+#page {
+  width: 7.5in;
+  height: 10in;
+  overflow: hidden;
+}
+.title {
+  height: 0.5in;
+  text-align: center;
+  font-size: 0.4in;
+  overflow: hidden;
+  font-weight: bold;
+}
+.line {
+  width: 100%;
+  border-top: 1px solid #ccc;
+  border-left: 2px solid #ccc;
+}
+.line tr {
+  border-bottom: 1px solid #ccc;
+}
+.beat.shown {
+  border-right: 1px solid #eee;
+}
+.measure-end {
+  border-right: 2px solid #ccc !important;
+}
+@media print {
+  #controls {
+    display: none;
+  }
+}
+</style>
+<style id="styleOverrides">
+.line {
+  height: 0.75in;
+  margin-top: 0.5in;
+}
+</style>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+<script>
+$(function() {
+  let measuresPerLine = 1;
+  let beatsPerMeasure = 1;
+  let linesToDraw = 8;
+  let title = '';
+  
+  $('#measures-per-line').on('change', function() {
+    measuresPerLine = Number($(this).val());
+    drawPage();
+  });
+  
+  $('#beats-per-measure').on('change', function() {
+    beatsPerMeasure = Number($(this).val());
+    drawPage();
+  });
+  
+  $('#lines-to-draw').on('change', function() {
+    linesToDraw = Number($(this).val());
+    drawPage();
+  });
+  
+  $('#title').on('change keyup', function() {
+    title = $(this).val();
+    drawPage();
+  });
+  
+  function drawPage() {
+    const $page = $('#page');
+    $page.empty();
+    
+    const cellsPerMeasure = beatsPerMeasure + 1; //one extra, because we want n lines so we need n+1 cells.
+    const cellsPerLine = cellsPerMeasure * measuresPerLine;
+    const lineHeightWithPadding = (title ? 9.5 : 10) / linesToDraw;
+    const linePadding = (Math.floor(lineHeightWithPadding * 40) / 100).toFixed(2) + 'in';
+    const lineHeight = (Math.floor(lineHeightWithPadding * 60) / 100).toFixed(2) + 'in';
+    
+    const style = $('#styleOverrides')[0].sheet.cssRules[0].style;
+    style.marginTop = linePadding;
+    style.height = lineHeight;
+    
+    if(title)
+      $page.append($('<div>').addClass('title').text(title));
+    for(let i = 0; i < linesToDraw; i++) {
+      const $table = $('<table>').addClass('line');
+      for(let string = 0; string < 5; string++) {
+        const $tr = $('<tr>');
+        
+        for(let beat = 0; beat < cellsPerLine; beat++) {
+          const $td = $('<td>').addClass('beat');
+          if(beatsPerMeasure > 1)
+            $td.addClass('shown');
+          if((beat + 1) % cellsPerMeasure === 0)
+            $td.addClass('measure-end');
+          $td.css('width', `calc(100%/${cellsPerLine})`);
+          $tr.append($td);
+        }
+        $table.append($tr);
+      }
+      
+      $page.append($table);
+    }
+  }
+  
+  drawPage();
+});
+</script>
+</head>
+<body>
+<div id="controls">
+<p>Measures per line:
+<select id="measures-per-line">
+  <option value="1" selected>Don't show</option>
+  <option>2</option>
+  <option>3</option>
+  <option>4</option>
+  <option>5</option>
+  <option>6</option>
+</select>
+</p>
+<p>Beats per measure (to show):
+<select id="beats-per-measure">
+  <option value="1" selected>Don't show</option>
+  <option>2</option>
+  <option>3</option>
+  <option>4</option>
+  <option>6</option>
+  <option>8</option>
+  <option>12</option>
+  <option>16</option>
+</select>
+</p>
+<p>Lines to draw:
+<select id="lines-to-draw">
+  <option>6</option>
+  <option>7</option>
+  <option selected>8</option>
+  <option>9</option>
+  <option>10</option>
+</select>
+</p>
+<p>
+Title: <input id="title" />
+</p>
+<button id="print" onclick="window.print()">Print</button>
+</div>
+<div id="page">
+</div>
+</body>
+</html>
