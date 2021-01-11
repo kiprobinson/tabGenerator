@@ -13,8 +13,6 @@ html, body {
   margin: 0;
 }
 #page {
-  width: 7.5in;
-  height: 10in;
   overflow: hidden;
 }
 #controls p {
@@ -66,11 +64,17 @@ html, body {
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
 <script>
 $(function() {
+  let paperSize = 'us';
   let numberOfStrings = 6;
   let measuresPerLine = 1;
   let beatsPerMeasure = 1;
   let linesToDraw = 8;
   let title = '';
+  
+  $('#paper-size').on('change', function() {
+    paperSize = $(this).val();
+    drawPage();
+  });
   
   $('#number-of-strings').on('change', function() {
     numberOfStrings = Number($(this).val());
@@ -100,7 +104,11 @@ $(function() {
   function drawPage() {
     const $page = $('#page');
     $page.empty();
-    const pageHeight = 10;
+    const pageMargin = 0.5;
+    const paperWidth = (paperSize === 'a4' ? 8.25 : 8.5);
+    const paperHeight = (paperSize === 'a4' ? 11.75 : 11);
+    const pageWidth = paperWidth - pageMargin * 2;
+    const pageHeight = paperHeight - pageMargin * 2;
     const titleHeight = (title ? 0.5 : 0);
     const watermarkHeight = 0.25;
     
@@ -116,6 +124,10 @@ $(function() {
       .line {
         margin-top: ${linePadding.toFixed(2)}in;
         height: ${lineHeight.toFixed(2)}in;
+      }
+      #page {
+        width: ${pageWidth.toFixed(2)}in;
+        height: ${pageHeight.toFixed(2)}in;
       }
     `);
     
@@ -151,6 +163,12 @@ $(function() {
 </head>
 <body>
 <div id="controls">
+<p>Paper Size:
+<select id="paper-size">
+  <option value="us" selected>US - 8.5" x 11"</option>
+  <option value="a4">A4 - 210mm x 297mm</option>
+</select>
+</p>
 <p>Number of strings:
 <select id="number-of-strings">
   <option>4</option>
