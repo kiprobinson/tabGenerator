@@ -59,10 +59,6 @@ html, body {
 }
 </style>
 <style id="styleOverrides">
-.line {
-  height: 0.75in;
-  margin-top: 0.5in;
-}
 </style>
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
 <script>
@@ -104,12 +100,15 @@ $(function() {
     const cellsPerMeasure = beatsPerMeasure + 1; //one extra, because we want n lines so we need n+1 cells.
     const cellsPerLine = cellsPerMeasure * measuresPerLine;
     const lineHeightWithPadding = tabAreaHeight / linesToDraw;
-    const linePadding = (Math.floor(lineHeightWithPadding * 40) / 100).toFixed(2) + 'in';
-    const lineHeight = (Math.floor(lineHeightWithPadding * 60) / 100).toFixed(2) + 'in';
+    const linePadding = (Math.floor(lineHeightWithPadding * 40) / 100);
+    const lineHeight = (Math.floor(lineHeightWithPadding * 60) / 100);
     
-    const style = $('#styleOverrides')[0].sheet.cssRules[0].style;
-    style.marginTop = linePadding;
-    style.height = lineHeight;
+    $('#styleOverrides').html(`
+      .line {
+        margin-top: ${linePadding.toFixed(2)}in;
+        height: ${lineHeight.toFixed(2)}in;
+      }
+    `);
     
     if(title)
       $page.append($('<div>').addClass('title').text(title));
