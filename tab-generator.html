@@ -63,10 +63,16 @@ html, body {
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
 <script>
 $(function() {
+  let numberOfStrings = 6;
   let measuresPerLine = 1;
   let beatsPerMeasure = 1;
   let linesToDraw = 8;
   let title = '';
+  
+  $('#number-of-strings').on('change', function() {
+    numberOfStrings = Number($(this).val());
+    drawPage();
+  });
   
   $('#measures-per-line').on('change', function() {
     measuresPerLine = Number($(this).val());
@@ -114,7 +120,8 @@ $(function() {
       $page.append($('<div>').addClass('title').text(title));
     for(let i = 0; i < linesToDraw; i++) {
       const $table = $('<table>').addClass('line');
-      for(let string = 0; string < 5; string++) {
+      //number of strings minus 1 because we're actually drawing tr's that have a top and a bottom...
+      for(let string = 0; string < (numberOfStrings-1); string++) {
         const $tr = $('<tr>');
         
         for(let beat = 0; beat < cellsPerLine; beat++) {
@@ -141,6 +148,14 @@ $(function() {
 </head>
 <body>
 <div id="controls">
+<p>Number of strings:
+<select id="number-of-strings">
+  <option>4</option>
+  <option>5</option>
+  <option selected>6</option>
+  <option>7</option>
+</select>
+</p>
 <p>Measures per line:
 <select id="measures-per-line">
   <option value="1" selected>Don't show</option>
