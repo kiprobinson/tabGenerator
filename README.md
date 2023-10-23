@@ -1,7 +1,6 @@
-# Tab Generator
-Simple tool to generate printable blank guitar tabs. Optionally include faint markings for multiple measures, and you can even include a faint marking for each beat in the measure. You can also optionally include a title.
+# Blank Tab Generator
 
-I threw this together pretty quickly to simplify something I was doing in Word previously. I don't intend to do much else with this, unless I need something else for my own purposes...
+Simple tool to generate printable blank guitar tabs. Optionally include faint markings for regular measures, even fainter markings for beats in the measure. I threw this together pretty quickly to simplify something I was doing in Word previously. The idea is to print something you can then write on in pencil when you're figuring something out.
 
 [View Demo][demo]
 
