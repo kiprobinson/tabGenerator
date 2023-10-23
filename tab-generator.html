@@ -64,6 +64,7 @@ html, body {
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script>
 $(function() {
+  const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
   let paperSize = 'us';
   let numberOfStrings = 6;
   let measuresPerLine = 1;
@@ -104,13 +105,17 @@ $(function() {
   function drawPage() {
     const $page = $('#page');
     $page.empty();
-    const pageMargin = 0.5;
-    const paperWidth = (paperSize === 'a4' ? 8.25 : 8.5);
-    const paperHeight = (paperSize === 'a4' ? 11.75 : 11);
+    
+    // because safari doesn't know how big an inch is...
+    const scale = isSafari ? 0.88 : 1;
+    
+    const pageMargin = 0.5 * scale;
+    const paperWidth = (paperSize === 'a4' ? 8.25 : 8.5) * scale;
+    const paperHeight = (paperSize === 'a4' ? 11.75 : 11) * scale;
     const pageWidth = paperWidth - pageMargin * 2;
     const pageHeight = paperHeight - pageMargin * 2;
-    const titleHeight = (title ? 0.5 : 0);
-    const watermarkHeight = 0.25;
+    const titleHeight = (title ? 0.5 : 0) * scale;
+    const watermarkHeight = 0.25 * scale;
     
     const tabAreaHeight = pageHeight - titleHeight - watermarkHeight;
     
